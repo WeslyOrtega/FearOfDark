@@ -7,6 +7,8 @@ TagManager:
   - Floor
   - Light
   - LightSafety
+  - Torch
+  - Moth
   layers:
   - Default
   - TransparentFX

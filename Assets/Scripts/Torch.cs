@@ -36,6 +36,10 @@ public class Torch : Interactable
         {
             StartCoroutine(lightUp(true));
         }
+        if (actor.tag == "Moth")
+        {
+            lightOff();
+        }
     }
 
     private IEnumerator lightUp(bool delay)
@@ -58,6 +62,21 @@ public class Torch : Interactable
         ignited_light.enabled = true;
         safety_zone.enabled = true;
         isIgnited = true;
+    }
+
+    private void lightOff()
+    {
+        
+        // Play animation
+        animator.SetBool("isOn", false);
+
+        // Turn off dim light
+        off_light.enabled = true;
+
+        // Turn on new light and enable safe zone
+        ignited_light.enabled = false;
+        safety_zone.enabled = false;
+        isIgnited = false;
     }
 
 }
