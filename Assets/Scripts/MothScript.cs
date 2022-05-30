@@ -69,7 +69,6 @@ public class MothScript : MonoBehaviour
         {
             if (obj.tag == "Torch")
             {
-                Debug.DrawLine(transform.position, obj.transform.position, Color.red);
                 return obj;
             }
         }
