@@ -7,42 +7,40 @@ using UnityEngine.UI;
 
 public class MothScript : MonoBehaviour
 {
-  [SerializeField] private GameObject spirit; 
-  [SerializeField] private float speed = 1.5f; 
-  Torch script;
-  public GameObject interactionRadius;
-  public GameObject lightRange;
-  private LevelManager levelManager;
-  /*void Awake()
-  {
-      script = torch.GetComponent<Torch>();
-  }*/
+    [SerializeField] private GameObject spirit;
+    [SerializeField] private float speed = 1.5f;
+    Torch script;
+    public GameObject interactionRadius;
+    public GameObject lightRange;
+    private LevelManager levelManager;
 
- // Start is called before the first frame update
+    // Start is called before the first frame update
     void Start()
     {
         levelManager = GameObject.FindObjectOfType<LevelManager>();
     }
 
-  void FixedUpdate()
-  {      
-    Collider2D torch = FindTorch();
-    if(torch)
+    void FixedUpdate()
     {
-        script = torch.GetComponent<Torch>();
-        if(script.isIgnited){
-            transform.position = Vector2.MoveTowards(transform.position, torch.transform.position, speed * Time.deltaTime);
-        }
-        else
+        Collider2D torch = FindTorch();
+        if (torch)
         {
-        transform.position = Vector2.MoveTowards(transform.position, spirit.transform.position, speed * Time.deltaTime);
-        }
-        // Get all the colliders in range
-        Collider2D[] inRange = Physics2D.OverlapCircleAll(
-            transform.position,
-            interactionRadius.transform.localScale.x
-        );
-        foreach (Collider2D collider in inRange)
+            script = torch.GetComponent<Torch>();
+            if (script.isIgnited)
+            {
+                transform.position = Vector2.MoveTowards(transform.position, torch.transform.position, speed * Time.deltaTime);
+            }
+            else
+            {
+                transform.position = Vector2.MoveTowards(transform.position, spirit.transform.position, speed * Time.deltaTime);
+            }
+
+            // Get all the colliders in range
+            Collider2D[] inRange = Physics2D.OverlapCircleAll(
+                transform.position,
+                interactionRadius.transform.lossyScale.x / 2
+            );
+            foreach (Collider2D collider in inRange)
             {
                 // Check which of those objects can be interacted with
                 Interactable interactable = collider.gameObject.GetComponent<Interactable>();
@@ -50,36 +48,17 @@ public class MothScript : MonoBehaviour
                 {
                     interactable.TriggerInteraction(gameObject);
                 }
-         }
-    }
-    else
-    {
-        transform.position = Vector2.MoveTowards(transform.position, spirit.transform.position, speed * Time.deltaTime);
-    }
-    
-
-
-    /*if(script.isIgnited){
-    transform.position = Vector2.MoveTowards(transform.position, torch.transform.position, speed * Time.deltaTime);
-    }
-    // Get all the colliders in range
-    Collider2D[] inRange = Physics2D.OverlapCircleAll(
-            transform.position,
-            interactionRadius.transform.localScale.x
-    );
-    foreach (Collider2D collider in inRange)
-        {
-            // Check which of those objects can be interacted with
-            Interactable interactable = collider.gameObject.GetComponent<Interactable>();
-            if (interactable)
-            {
-                interactable.TriggerInteraction(gameObject);
             }
-        }*/
-  }
+        }
+        else
+        {
+            transform.position = Vector2.MoveTowards(transform.position, spirit.transform.position, speed * Time.deltaTime);
+        }
+    }
 
-  private Collider2D FindTorch()
+    private Collider2D FindTorch()
     {
+
         Collider2D[] inRange = Physics2D.OverlapCircleAll(
             lightRange.transform.position,
             lightRange.transform.lossyScale.x / 2,
@@ -90,6 +69,7 @@ public class MothScript : MonoBehaviour
         {
             if (obj.tag == "Torch")
             {
+                Debug.DrawLine(transform.position, obj.transform.position, Color.red);
                 return obj;
             }
         }
@@ -99,10 +79,8 @@ public class MothScript : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collider)
     {
-        Debug.Log(collider.name);
         if (collider.name == "Spirit")
         {
-            Debug.Log("Entered");
             levelManager.ResetScene();
         }
     }
