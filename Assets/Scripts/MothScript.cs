@@ -5,24 +5,30 @@ using UnityEngine;
 public class MothScript : MonoBehaviour
 {
     [SerializeField] private float speed = 1.5f;
-    [SerializeField] public GameObject interactionRadius;
-    [SerializeField] public GameObject lightRange;
+    [SerializeField] private GameObject interactionRadius;
+    [SerializeField] private GameObject lightRange;
+
+    private Animator animator;
+    private bool isFlipped = true;
+
     private LevelManager levelManager;
     private GameObject spirit;
 
     // Start is called before the first frame update
     void Start()
     {
-        levelManager = GameObject.FindObjectOfType<LevelManager>();
+        animator = GetComponent<Animator>();
+        levelManager = FindObjectOfType<LevelManager>();
         spirit = FindObjectOfType<SpiritMovement>().gameObject;
     }
 
     void Update()
     {
         Collider2D torch = FindTorch();
+        Vector3 target;
         if (torch is not null)
         {
-            transform.position = Vector2.MoveTowards(transform.position, torch.transform.position, speed * Time.deltaTime);
+            target = torch.transform.position;
 
             if (Vector2.Distance(transform.position, torch.transform.position)
                 < interactionRadius.transform.lossyScale.x / 2)
@@ -32,8 +38,11 @@ public class MothScript : MonoBehaviour
         }
         else
         {
-            transform.position = Vector2.MoveTowards(transform.position, spirit.transform.position, speed * Time.deltaTime);
+            target = spirit.transform.position;
         }
+
+        Animate(target - transform.position);
+        transform.position = Vector2.MoveTowards(transform.position, target, speed * Time.deltaTime);
     }
 
     private Collider2D FindTorch()
@@ -70,6 +79,20 @@ public class MothScript : MonoBehaviour
         if (collider.name == "Spirit")
         {
             levelManager.ResetScene();
+        }
+    }
+
+    void Animate(Vector3 movementDir)
+    {
+        if (movementDir.x < 0 && !isFlipped)
+        {
+            transform.Rotate(0, 180, 0);
+            isFlipped = true;
+        }
+        else if (movementDir.x > 0 && isFlipped)
+        {
+            transform.Rotate(0, 180, 0);
+            isFlipped = false;
         }
     }
 }

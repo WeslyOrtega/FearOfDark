@@ -88,11 +88,6 @@ public class KidMovement : Playable
                 onJumpUp();
             }
 
-            if (checkCanJump() && last_pressed_jump > .05)
-            {
-                isJumping = false;
-            }
-
             if (Input.GetButtonDown("Interact"))
             {
                 OnInteract();
@@ -100,6 +95,12 @@ public class KidMovement : Playable
         }
 
         last_pressed_jump += Time.deltaTime;
+
+
+        if (checkCanJump() && last_pressed_jump > .05)
+        {
+            isJumping = false;
+        }
 
         // Handle all animations
         animate();
@@ -171,6 +172,7 @@ public class KidMovement : Playable
 
             has_jumped = true;
             isJumping = true;
+            last_pressed_jump = 0;
         }
     }
 
@@ -228,6 +230,7 @@ public class KidMovement : Playable
         }
         #endregion
 
+        animator.SetBool("isJumping", isJumping);
         animator.SetBool("isRunning", isRunning);
     }
 
