@@ -31,6 +31,8 @@ public class KidMovement : Playable
     #endregion
 
     [Header("Other")]
+    [SerializeField] private GameObject interactionRadius;
+
     #region animation
     public Animator animator;
     private bool isFliped = false; // true = facing to the left
@@ -89,6 +91,11 @@ public class KidMovement : Playable
             if (checkCanJump() && last_pressed_jump > .05)
             {
                 isJumping = false;
+            }
+
+            if (Input.GetButtonDown("Interact"))
+            {
+                OnInteract();
             }
         }
 
@@ -173,6 +180,25 @@ public class KidMovement : Playable
         if (rb.velocity.y > 0 && isJumping)
         {
             rb.AddForce(Vector2.down * rb.velocity.y * jump_release_multiplier, ForceMode2D.Impulse);
+        }
+    }
+
+    private void OnInteract()
+    {
+        // Get all the colliders in range
+        Collider2D[] inRange = Physics2D.OverlapCircleAll(
+            transform.position,
+            interactionRadius.transform.localScale.x
+        );
+
+        foreach (Collider2D collider in inRange)
+        {
+            // Check which of those objects can be interacted with
+            Interactable interactable = collider.gameObject.GetComponent<Interactable>();
+            if (interactable)
+            {
+                interactable.TriggerInteraction(gameObject);
+            }
         }
     }
 
