@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Torch : Interactable
 {
+    [Header("Animation")]
     #region animation
     public Animator animator;
     public float anim_delay;
@@ -16,6 +17,13 @@ public class Torch : Interactable
     public Light2D ignited_light;
     #endregion
 
+    #region water
+    [Header("Water")]
+    [SerializeField] private int waterThreshold;
+    private int _waterCount = 0;
+    #endregion
+
+    [Header("Misc")]
     private AudioSource source;
 
     public Collider2D safety_zone;
@@ -52,6 +60,12 @@ public class Torch : Interactable
             source.Play();
         }
 
+        Physics2D.IgnoreLayerCollision(
+            gameObject.layer,
+            LayerMask.GetMask("Water"),
+            false
+        );
+
         // Play animation
         animator.SetBool("isOn", true);
 
@@ -66,17 +80,41 @@ public class Torch : Interactable
 
     private void lightOff()
     {
+        Physics2D.IgnoreLayerCollision(
+            gameObject.layer,
+            LayerMask.GetMask("Water"),
+            true
+        );
         
         // Play animation
         animator.SetBool("isOn", false);
 
-        // Turn off dim light
+        // Turn on dim light
         off_light.enabled = true;
 
-        // Turn on new light and enable safe zone
+        // Turn off lit light and disable safe zone
         ignited_light.enabled = false;
         safety_zone.enabled = false;
         isIgnited = false;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collider)
+    {
+        if (collider.CompareTag("Water"))
+        {
+            _waterCount++;
+            if (_waterCount >= waterThreshold)
+            {
+                lightOff();
+            }
+        } 
+    }
+
+    private void OnTriggerExit2D(Collider2D collider)
+    {
+        if (collider.CompareTag("Water")) {
+            _waterCount--;
+        }
     }
 
 }
