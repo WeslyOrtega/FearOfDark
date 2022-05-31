@@ -1,53 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-
-
 
 public class MothScript : MonoBehaviour
 {
-    [SerializeField] private GameObject spirit;
     [SerializeField] private float speed = 1.5f;
-    Torch script;
-    public GameObject interactionRadius;
-    public GameObject lightRange;
+    [SerializeField] public GameObject interactionRadius;
+    [SerializeField] public GameObject lightRange;
     private LevelManager levelManager;
+    private GameObject spirit;
 
     // Start is called before the first frame update
     void Start()
     {
         levelManager = GameObject.FindObjectOfType<LevelManager>();
+        spirit = FindObjectOfType<SpiritMovement>().gameObject;
     }
 
-    void FixedUpdate()
+    void Update()
     {
         Collider2D torch = FindTorch();
-        if (torch)
+        if (torch is not null)
         {
-            script = torch.GetComponent<Torch>();
-            if (script.isIgnited)
-            {
-                transform.position = Vector2.MoveTowards(transform.position, torch.transform.position, speed * Time.deltaTime);
-            }
-            else
-            {
-                transform.position = Vector2.MoveTowards(transform.position, spirit.transform.position, speed * Time.deltaTime);
-            }
+            transform.position = Vector2.MoveTowards(transform.position, torch.transform.position, speed * Time.deltaTime);
 
-            // Get all the colliders in range
-            Collider2D[] inRange = Physics2D.OverlapCircleAll(
-                transform.position,
-                interactionRadius.transform.lossyScale.x / 2
-            );
-            foreach (Collider2D collider in inRange)
+            if (Vector2.Distance(transform.position, torch.transform.position)
+                < interactionRadius.transform.lossyScale.x / 2)
             {
-                // Check which of those objects can be interacted with
-                Interactable interactable = collider.gameObject.GetComponent<Interactable>();
-                if (interactable)
-                {
-                    interactable.TriggerInteraction(gameObject);
-                }
+                torch.GetComponent<Torch>().TriggerInteraction(gameObject);
             }
         }
         else
@@ -62,18 +42,27 @@ public class MothScript : MonoBehaviour
         Collider2D[] inRange = Physics2D.OverlapCircleAll(
             lightRange.transform.position,
             lightRange.transform.lossyScale.x / 2,
-            LayerMask.GetMask(new string[] { "Player", "Background" })
+            LayerMask.GetMask(new string[] { "Background" })
         );
 
+        Collider2D nearest = null;
         foreach (Collider2D obj in inRange)
         {
-            if (obj.tag == "Torch")
+            Torch t = obj.GetComponent<Torch>();
+            if (t is not null && t.isIgnited)
             {
-                return obj;
+                if (
+                    nearest is null
+                    || Vector2.Distance(transform.position, obj.transform.position)
+                    < Vector2.Distance(transform.position, nearest.transform.position)
+                    )
+                {
+                    nearest = obj;
+                }
             }
         }
 
-        return null;
+        return nearest;
     }
 
     void OnTriggerEnter2D(Collider2D collider)
