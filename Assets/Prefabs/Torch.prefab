@@ -341,7 +341,7 @@ MonoBehaviour:
   isIgnited: 0
   off_light: {fileID: 4145311169758314370}
   ignited_light: {fileID: 4145311170282535715}
-  waterThreshold: 5
+  waterThreshold: 10
   safety_zone: {fileID: 7773670659652704611}
 --- !u!1 &4145311169758314368
 GameObject:
