@@ -5,6 +5,7 @@ using UnityEngine;
 public class SpiritMovement : Playable
 {
 
+    [Header("Other")]
     public float speed = 10f;
 
     #region animation
@@ -18,6 +19,9 @@ public class SpiritMovement : Playable
     #endregion
 
     private Rigidbody2D rb;
+
+    [SerializeField] private int waterThreshold;
+    private int _waterCount = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -93,6 +97,25 @@ public class SpiritMovement : Playable
             animator.SetTrigger("IgniteAction");
         }
         #endregion
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("Water"))
+        {
+            _waterCount++;
+            if (_waterCount >= waterThreshold)
+            {
+                FindObjectOfType<LevelManager>().ResetScene();
+            }
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("Water")) {
+            _waterCount--;
+        }
     }
 
 }
