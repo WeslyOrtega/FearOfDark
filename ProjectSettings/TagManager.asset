@@ -9,6 +9,7 @@ TagManager:
   - LightSafety
   - Torch
   - Moth
+  - Water
   layers:
   - Default
   - TransparentFX
