@@ -30,7 +30,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Levels/Level4.unity
     guid: cfa5346ea5f17e746aa319daa48fa051
   - enabled: 1
-    path: Assets/Scenes/Levels/Level8.unity
+    path: Assets/Scenes/Levels/Cave Moth Demo.unity
     guid: a9b160ea8515bc54ebed43a3b0d8b09b
   - enabled: 1
     path: Assets/Scenes/ThankYouScreen.unity
@@ -42,6 +42,6 @@ EditorBuildSettings:
     path: Assets/Scenes/LevelSelection.unity
     guid: df907d8cbcd5932408cf4f1f390dd4d0
   - enabled: 1
-    path: Assets/Scenes/Levels/Level9.unity
+    path: Assets/Scenes/Levels/Cave Water Demo.unity
     guid: d1a45cc1ee7e1104f97b1fcd60642803
   m_configObjects: {}
