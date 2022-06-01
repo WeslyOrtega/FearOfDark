@@ -7,6 +7,7 @@ public class MothScript : MonoBehaviour
     [SerializeField] private float speed = 1.5f;
     [SerializeField] private GameObject interactionRadius;
     [SerializeField] private GameObject lightRange;
+    private bool isPlayerInRange = false;
 
     private Animator animator;
     private bool isFlipped = true;
@@ -24,6 +25,15 @@ public class MothScript : MonoBehaviour
 
     void Update()
     {
+        Collider2D inRange = Physics2D.OverlapCircle(
+            lightRange.transform.position,
+            lightRange.transform.lossyScale.x / 2,
+            LayerMask.GetMask(new string[] { "Player" })
+        );
+        isPlayerInRange = inRange is not null;
+
+        if (!isPlayerInRange) return;
+
         Collider2D torch = FindTorch();
         Vector3 target;
         if (torch is not null)
