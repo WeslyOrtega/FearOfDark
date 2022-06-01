@@ -35,4 +35,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ThankYouScreen.unity
     guid: 3295b1f25a1948c47b4ffce135fda5a1
+  - enabled: 1
+    path: Assets/Scenes/StartGame.unity
+    guid: 5b609682dfb82ca42bcbccc58c18ccfe
+  - enabled: 1
+    path: Assets/Scenes/LevelSelection.unity
+    guid: df907d8cbcd5932408cf4f1f390dd4d0
+  - enabled: 1
+    path: Assets/Scenes/Levels/Level9.unity
+    guid: d1a45cc1ee7e1104f97b1fcd60642803
   m_configObjects: {}
