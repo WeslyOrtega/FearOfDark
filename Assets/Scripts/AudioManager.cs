@@ -24,6 +24,7 @@ public class AudioManager : MonoBehaviour
             if (!this.background_music.Equals(instance.background_music))
             {
                 instance.Stop(instance.background_music);
+                instance.background_music = this.background_music;
                 instance.Play(this.background_music);
             }
 
