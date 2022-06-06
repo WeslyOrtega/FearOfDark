@@ -50,4 +50,5 @@ MonoBehaviour:
     source: {fileID: 0}
     loop: 1
     volume: 1
+  background_music: background_music
   audioMixer: {fileID: 24300002, guid: 9a98f9a6dbd5712419d009115af3761d, type: 2}
