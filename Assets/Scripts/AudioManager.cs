@@ -9,6 +9,7 @@ public class AudioManager : MonoBehaviour
 {
 
     public Sound[] sounds;
+    public string background_music;
     public static AudioManager instance;
     public AudioMixerGroup audioMixer;
 
@@ -20,6 +21,12 @@ public class AudioManager : MonoBehaviour
         }
         else
         {
+            if (!this.background_music.Equals(instance.background_music))
+            {
+                instance.Stop(instance.background_music);
+                instance.Play(this.background_music);
+            }
+
             Destroy(gameObject);
             return;
         }
@@ -39,11 +46,13 @@ public class AudioManager : MonoBehaviour
 
     void Start()
     {
-        Play("background_music");
+        Play(background_music);
     }
 
     public void Play(string name)
     {
+        if (name.Equals("")) return;
+
         Sound s = Array.Find<Sound>(sounds, s => s.name == name);
         if (s is not null)
         {
@@ -58,6 +67,8 @@ public class AudioManager : MonoBehaviour
 
     public void Stop(string name)
     {
+        if (name.Equals("")) return;
+
         Sound s = Array.Find<Sound>(sounds, s => s.name == name);
         if (s is not null)
         {
